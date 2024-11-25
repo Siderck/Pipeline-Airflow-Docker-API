@@ -12,14 +12,14 @@ with DAG(
         postgres_conn_id = "postgres_localhost",
         sql = """
                 create table if not exists prueba_ml (
-                    id varchar(30),
-                    site_id varchar(30),
-                    title varchar(50),
-                    price varchar(10),
-                    sold_quantity varchar(20),
-                    thumbnail varchar(50),
-                    created_date varchar(8),
-                    primary key(id,created_date)
+                    id varchar(30) primary key,
+                    title varchar(255),
+                    price decimal(10, 2),
+                    original_price decimal(10, 2),
+                    discount_percentage decimal(5, 2),  -- Nuevo campo para el porcentaje de descuento
+                    available_quantity integer,
+                    thumbnail varchar(255),
+                    created_date varchar(8)
                 )
               """
     )
