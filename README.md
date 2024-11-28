@@ -6,6 +6,13 @@ Este proyecto es una canalización de datos construida con **Apache Airflow** pa
 
 ---
 
+## 🔧 Arquitectura
+
+![Arquitectura del Proyecto](images/diagram.png)
+
+
+---
+
 ## 🌟 Características principales
 - 🔍 **Extracción de datos**: Uso de la API pública de MercadoLibre para acceder a información de productos.
 - 🧹 **Transformación de datos**:
