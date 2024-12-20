@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     steps:
     - name: Checkout code
@@ -44,8 +44,9 @@ jobs:
 
     - name: Run Airflow DAG tests
       run: |
-        docker-compose exec airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) create_tables"
-        docker-compose exec airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) etl_to_postgres"
+        docker-compose exec -T airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) create_tables"
+        docker-compose exec -T airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) etl_to_postgres"
+
 
     - name: Shut down Docker containers
       run: |
