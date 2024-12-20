@@ -44,3 +44,7 @@ jobs:
     - name: Shut down Docker containers
       run: |
         docker-compose down
+
+    - name: Clean up Docker images
+      run: |
+        docker rmi my-airflow-image
