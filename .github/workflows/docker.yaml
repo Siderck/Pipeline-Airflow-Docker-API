@@ -1,0 +1,46 @@
+name: CI/CD for Airflow Project
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Build Docker image
+      run: |
+        docker build -t my-airflow-image .
+
+    - name: Run Docker Compose (Test Containers)
+      run: |
+        docker-compose -f docker-compose.yaml up -d
+        docker-compose ps  # Verifica que los contenedores estén corriendo
+
+    - name: Run Airflow DAG tests
+      run: |
+        docker-compose exec airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) create_tables"
+        docker-compose exec airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) etl_to_postgres"
+
+    - name: Shut down Docker containers
+      run: |
+        docker-compose down
