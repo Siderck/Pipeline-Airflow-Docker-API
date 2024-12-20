@@ -152,6 +152,7 @@ services:
     volumes:
       - airflow_tmp_volume:/opt/airflow/tmp
       - D:/airflow-docker/tmp:/opt/airflow/tmp
+      - airflow-docker-tmp-volume:/opt/airflow/tmp
 
   airflow-init:
     <<: *airflow-common
@@ -258,3 +259,4 @@ services:
 volumes:
   postgres-db-volume:
   airflow_tmp_volume:
+  airflow-docker-tmp-volume:
