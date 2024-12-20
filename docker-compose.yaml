@@ -151,6 +151,7 @@ services:
         condition: service_completed_successfully
     volumes:
       - airflow_tmp_volume:/opt/airflow/tmp
+      - D:/airflow-docker/tmp:/opt/airflow/tmp
 
   airflow-init:
     <<: *airflow-common
