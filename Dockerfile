@@ -10,11 +10,7 @@ RUN mkdir -p /opt/airflow/logs /opt/airflow/config /opt/airflow/plugins
 # Asigna permisos adecuados a los directorios
 RUN chown -R ${AIRFLOW_UID:-50000}:0 /opt/airflow/logs /opt/airflow/config /opt/airflow/plugins
 
-# Copia las configuraciones adicionales si las tienes
-# Por ejemplo: Si tienes archivos específicos de configuración, puedes copiarlos al contenedor
-# COPY ./config/airflow.cfg /opt/airflow/config/airflow.cfg
 
-# Configura el contenedor para que use el UID correcto
 USER ${AIRFLOW_UID:-50000}
 
 # Establecer el directorio de trabajo para Airflow
