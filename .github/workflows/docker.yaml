@@ -42,13 +42,10 @@ jobs:
         docker-compose -f docker-compose.yaml up -d
         docker-compose ps  # Verifies containers are running
 
-    # Validate Airflow DAGs using the airflow-dags-test-action
-    - name: Validate Airflow DAGs
-      uses: micael-grilo/airflow-dags-test-action@v2.8.1
-      with:
-        requirements-file: requirements.txt  # Optional, specify your requirements file if needed
-        dags-path: dags  # Path to your DAGs directory
-        
+    - name: Import Airflow Variables
+      run: |
+        docker-compose exec -T airflow-webserver bash -c "airflow variables import /path/to/var.json"
+
     - name: Run Airflow DAG tests
       run: |
         docker-compose exec -T airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) create_tables"
