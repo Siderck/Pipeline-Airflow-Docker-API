@@ -48,8 +48,6 @@ jobs:
       with:
         requirements-file: requirements.txt  # Optional, specify your requirements file if needed
         dags-path: dags  # Path to your DAGs directory
-        dags-test-folder: tests  # Optional, specify where the tests are located
-        var-file: var.json  # Optional, specify any variables to be used
         
     - name: Run Airflow DAG tests
       run: |
