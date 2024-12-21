@@ -33,8 +33,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    
-
     - name: Build Docker image
       run: |
         docker build -t my-airflow-image .
@@ -44,6 +42,15 @@ jobs:
         docker-compose -f docker-compose.yaml up -d
         docker-compose ps  # Verifies containers are running
 
+    # Validate Airflow DAGs using the airflow-dags-test-action
+    - name: Validate Airflow DAGs
+      uses: micael-grilo/airflow-dags-test-action@v2.8.1
+      with:
+        requirements-file: requirements.txt  # Optional, specify your requirements file if needed
+        dags-path: dags  # Path to your DAGs directory
+        dags-test-folder: tests  # Optional, specify where the tests are located
+        var-file: var.json  # Optional, specify any variables to be used
+        
     - name: Run Airflow DAG tests
       run: |
         docker-compose exec -T airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) create_tables"
