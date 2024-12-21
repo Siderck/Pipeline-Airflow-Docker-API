@@ -42,10 +42,6 @@ jobs:
         docker-compose -f docker-compose.yaml up -d
         docker-compose ps  # Verifies containers are running
 
-    - name: Import Airflow Variables
-      run: |
-        docker-compose exec -T airflow-webserver bash -c "airflow variables import /path/to/var.json"
-
     - name: Run Airflow DAG tests
       run: |
         docker-compose exec -T airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) create_tables"
