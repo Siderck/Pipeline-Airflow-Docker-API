@@ -13,27 +13,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Paso 1: Checkout del código fuente
     - name: Checkout code
       uses: actions/checkout@v3  
 
+    # Paso 2: Configuración de Docker Buildx
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
+    # Paso 3: Instalación de Docker Compose
     - name: Install Docker Compose
       run: |
         sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
         docker-compose --version
 
+    # Paso 4: Construcción de la imagen Docker de Airflow
     - name: Build Docker image
       run: |
         docker build -t my-airflow-image .
 
+    # Paso 5: Ejecución de los contenedores con Docker Compose
     - name: Run Docker Compose (Test Containers)
       run: |
         docker-compose -f docker-compose.yaml up -d
         docker-compose ps
 
+    # Paso 6: Esperar que el Webserver de Airflow esté listo
     - name: Wait for Airflow to be ready
       run: |
         echo "Waiting for Airflow Webserver to be ready..."
@@ -43,25 +49,31 @@ jobs:
         done
         echo "Airflow is ready!"
 
+    # Paso 7: Esperar que el Scheduler cargue los DAGs
     - name: Wait for Scheduler to load DAGs
       run: sleep 60
 
+    # Paso 8: Listar los DAGs disponibles para verificación
     - name: List DAGs to verify availability
       run: |
         docker-compose exec -T airflow-webserver airflow dags list
 
+    # Paso 9: Despausar el DAG si es necesario (actualizado con el ID correcto)
     - name: Unpause DAG (if necessary)
       run: |
-        docker-compose exec -T airflow-webserver airflow dags unpause data_pipeline
+        docker-compose exec -T airflow-webserver airflow dags unpause etl_to_postgres
 
+    # Paso 10: Ejecutar pruebas del DAG en Airflow
     - name: Run Airflow DAG tests
       run: |
-        docker-compose exec -T airflow-webserver airflow dags trigger -e $(date +%Y-%m-%d) data_pipeline
+        docker-compose exec -T airflow-webserver airflow dags trigger -e $(date +%Y-%m-%d) etl_to_postgres
 
+    # Paso 11: Detener y limpiar contenedores de Docker
     - name: Shut down Docker containers
       run: |
         docker-compose down
 
+    # Paso 12: Limpieza de imágenes Docker
     - name: Clean up Docker images
       run: |
         docker rmi my-airflow-image
