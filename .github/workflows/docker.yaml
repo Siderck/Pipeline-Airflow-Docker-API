@@ -37,10 +37,11 @@ jobs:
     - name: Wait for Airflow to be ready
       run: |
         echo "Waiting for Airflow Webserver to be ready..."
-        until docker-compose exec airflow-webserver curl -s http://localhost:8080/health | grep '"status":"healthy"'; do
+        while ! docker-compose logs airflow-webserver | grep -q "Listening at: http://0.0.0.0:8080"; do
           echo "Waiting for Airflow..."
           sleep 10
         done
+        echo "Airflow is ready!"
 
     - name: Run Airflow DAG tests
       run: |
