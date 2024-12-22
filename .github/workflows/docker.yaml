@@ -43,9 +43,20 @@ jobs:
         done
         echo "Airflow is ready!"
 
+    - name: Wait for Scheduler to load DAGs
+      run: sleep 60
+
+    - name: List DAGs to verify availability
+      run: |
+        docker-compose exec -T airflow-webserver airflow dags list
+
+    - name: Unpause DAG (if necessary)
+      run: |
+        docker-compose exec -T airflow-webserver airflow dags unpause data_pipeline
+
     - name: Run Airflow DAG tests
       run: |
-        docker-compose exec -T airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) data_pipeline"
+        docker-compose exec -T airflow-webserver airflow dags trigger -e $(date +%Y-%m-%d) data_pipeline
 
     - name: Shut down Docker containers
       run: |
