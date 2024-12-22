@@ -44,7 +44,7 @@ jobs:
 
     - name: Run Airflow DAG tests
       run: |
-        docker-compose exec -T airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) etl_to_postgres"
+        docker-compose exec -T airflow-webserver bash -c "airflow dags trigger -e $(date +%Y-%m-%d) data_pipeline"
 
     - name: Shut down Docker containers
       run: |
