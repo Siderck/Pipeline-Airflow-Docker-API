@@ -1,3 +1,5 @@
+[![CI/CD for Airflow Project](https://github.com/Siderck/Pipeline-Airflow-Docker-API/actions/workflows/docker.yaml/badge.svg)](https://github.com/Siderck/Pipeline-Airflow-Docker-API/actions/workflows/docker.yaml)
+
 # 📊 ETL con Airflow para consumir datos desde una API
 ---
 
